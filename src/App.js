@@ -1,13 +1,42 @@
-import Card from './components/Card';
+import Card from './components/Card/Card';
 import Header from './components/Header';
 import Drawer from './components/Drawer';
+import React from 'react';
+
+
+
+
 
 function App() {
-  return (
+  const [items, setItems] = React.useState([]);
+  const [cartItems, setCartItems] = React.useState([]); 
+  const [cartOpened, setCartOpened] = React.useState(false);
+  
+ 
+  
+
+
+
+
+  React.useEffect(() => {
+    fetch('https://60e6fab615387c00173e49d4.mockapi.io/items')
+    .then(res => {
+      return res.json();
+    })
+    .then(json => {
+        setItems(json);
+      });
+  }, []);
+
+  const onAddToCart = (obj) => {
+      setCartItems(prev => [...prev, obj]);
+  }
+  
+   return (
     <div className="wrapper clear">
-     
-      <Drawer />     
-      <Header />
+
+      {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)}/>}
+      <Header onCartClick={() => setCartOpened(true)} />
       <div className="content p-40">
         <div className="d-flex align-center justify-between">
           <h1>Все кроссовки</h1>
@@ -18,56 +47,18 @@ function App() {
         </div>
 
 
-        <div className="sneakers d-flex justify-between">
-            <Card/>
-          <div className="card">
-            <div className="favorite">
-              <img src="/images/heart-unliked.svg" alt="unliked" />
-            </div>
-            <img width={133} height={112} src="/images/sneakers/2.jpg" alt="Sneak" />
-            <h5>Мужские Кроссовки Nike Air Max 270</h5>
-            <div className="d-flex justify-between align-center" >
-              <div className="d-flex flex-column">
-                <span >Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-              <button className="button">
-                <img width={11} height={11} src="/images/plus.svg" alt="PLUS" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <div className="favorite">
-              <img src="/images/heart-unliked.svg" alt="unliked" />
-            </div>
-            <img width={133} height={112} src="/images/sneakers/3.jpg" alt="Sneak" />
-            <h5>Мужские Кроссовки Nike Blazer Mid Suede</h5>
-            <div className="d-flex justify-between align-center" >
-              <div className="d-flex flex-column">
-                <span >Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-              <button className="button">
-                <img width={11} height={11} src="/images/plus.svg" alt="PLUS" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <div className="favorite">
-              <img src="/images/heart-unliked.svg" alt="unliked" />
-            </div>
-            <img width={133} height={112} src="/images/sneakers/4.jpg" alt="Sneak" />
-            <h5>Кроссовки Puma X Aka Boku Future Rider</h5>
-            <div className="d-flex justify-between align-center" >
-              <div className="d-flex flex-column">
-                <span >Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-              <button className="button">
-                <img width={11} height={11} src="/images/plus.svg" alt="PLUS" />
-              </button>
-            </div>
-          </div>
+        <div className="sneakers d-flex justify-between flex-wrap">
+          {
+            items.map(obj => (
+              <Card
+               title={obj.title} 
+               price={obj.price}
+               imageUrl={obj.imageUrl} 
+               onPlus={(obj) => onAddToCart(obj)}/>
+            ))
+          }
+
+
         </div>
       </div>
     </div>
