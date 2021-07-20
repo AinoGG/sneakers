@@ -1,7 +1,7 @@
 import React from "react";
 
 
-function Drawer({ onClose, items = []}) {
+function Drawer({ onClose, onRemove, items = []}) {
   
    
     return (
@@ -9,7 +9,10 @@ function Drawer({ onClose, items = []}) {
         <div className="overlay">
             <div className="drawer d-flex flex-column">
                 <h2 className="d-flex justify-between align-center">Корзина <img className="remove__btn cu-p" src="/images/x-btn.svg" alt="x" onClick={onClose} /></h2>
-                <div className="cart__items">
+
+            {items.length > 0 ? ( 
+                           <div>
+                                 <div className="cart__items">
                     {items.map((obj) => (
                         <div className="cart__item d-flex align-center">
                             <img className="mr-20" width={70} height={70} src={obj.imageUrl} alt="sneakers" />
@@ -17,7 +20,7 @@ function Drawer({ onClose, items = []}) {
                                 <p className="mb-5">{obj.title}</p>
                                 <b>{obj.price} руб.</b>
                             </div>
-                            <img className="remove__btn" src="/images/x-btn.svg" alt="x" />
+                            <img onClick={() => onRemove(obj.id)} className="remove__btn" src="/images/x-btn.svg" alt="x" />
                         </div>
                     ))}
                 </div>
@@ -34,6 +37,12 @@ function Drawer({ onClose, items = []}) {
                     </li>
                 </ul>
                 <button id="submit">Оформить заказ <img src="/images/arrow.svg" alt="arrow" /></button>
+                           </div>
+                       ) : (<div  className="mt-40"><span>Корзина пуста</span> <button onClick={onClose} id="submit">Вернуться к покупкам </button></div>
+                        ) 
+                   } 
+
+              
             </div>
         </div>
 
